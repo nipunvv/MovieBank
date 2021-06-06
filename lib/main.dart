@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:movie_bank/constants/constants.dart';
+import 'package:movie_bank/models/Movie.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MovieBank());
@@ -27,13 +33,77 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Movie>> futureMovie;
+
+  Future<List<Movie>> fetchMovies() async {
+    String url = "${TMDB_API_URL}movie/popular?language=en-US&page=1";
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
+    );
+
+    if (response.statusCode == 200) {
+      List<Movie> movies = [];
+      for (Map<String, dynamic> movie in jsonDecode(response.body)['results']) {
+        movies.add(Movie.fromJson(movie));
+      }
+      return movies;
+    } else {
+      throw Exception('Failed to load Movie');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    futureMovie = fetchMovies();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return Form(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: FutureBuilder<List<Movie>>(
+              future: futureMovie,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Movie>? movies = snapshot.data;
+                  return GridView.count(
+                    crossAxisCount: 2,
+                    children: List.generate(movies!.length, (index) {
+                      return Card(
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Image.network(
+                                "$TMDB_WEB_URL${movies[index].posterPath}",
+                              ),
+                              Text(
+                                movies[index].title,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+
+                return Container(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+          ),
+        ],
       ),
-      body: Container(),
     );
   }
 }
