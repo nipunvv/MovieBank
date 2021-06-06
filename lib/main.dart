@@ -61,44 +61,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder<List<Movie>>(
-        future: futureMovie,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Movie>? movies = snapshot.data;
-            return GridView.count(
-              crossAxisCount: 3,
-              children: List.generate(movies!.length, (index) {
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Card(
-                    child: Column(
-                      children: [
-                        Image.network(
-                          "$TMDB_WEB_URL${movies[index].posterPath}",
-                        ),
-                        Text(
-                          movies[index].title,
-                        ),
-                      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Movie App'),
+      ),
+      body: Container(
+        child: FutureBuilder<List<Movie>>(
+          future: futureMovie,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Movie>? movies = snapshot.data;
+              return GridView.count(
+                crossAxisCount: 3,
+                children: List.generate(movies!.length, (index) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Card(
+                      child: Column(
+                        children: [
+                          Image.network(
+                            "$TMDB_WEB_URL${movies[index].posterPath}",
+                          ),
+                          Text(
+                            movies[index].title,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Quicksand',
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
+                  );
+                }),
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
 
-          return SizedBox(
-            height: 100,
-            width: 100,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        },
+            return SizedBox(
+              height: 100,
+              width: 100,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
