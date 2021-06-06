@@ -79,8 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Card(
                       child: Column(
                         children: [
-                          Image.network(
-                            "$TMDB_WEB_URL${movies[index].posterPath}",
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Image.network(
+                              "$TMDB_WEB_URL${movies[index].posterPath}",
+                            ),
                           ),
                           Text(
                             movies[index].title,
