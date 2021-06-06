@@ -61,48 +61,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: FutureBuilder<List<Movie>>(
-              future: futureMovie,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List<Movie>? movies = snapshot.data;
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    children: List.generate(movies!.length, (index) {
-                      return Card(
-                        child: Container(
-                          child: Column(
-                            children: [
-                              Image.network(
-                                "$TMDB_WEB_URL${movies[index].posterPath}",
-                              ),
-                              Text(
-                                movies[index].title,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-
+    return Container(
+      child: FutureBuilder<List<Movie>>(
+        future: futureMovie,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Movie>? movies = snapshot.data;
+            return GridView.count(
+              crossAxisCount: 3,
+              children: List.generate(movies!.length, (index) {
                 return Container(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Image.network(
+                          "$TMDB_WEB_URL${movies[index].posterPath}",
+                        ),
+                        Text(
+                          movies[index].title,
+                        ),
+                      ],
+                    ),
+                  ),
                 );
-              },
+              }),
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+
+          return SizedBox(
+            height: 100,
+            width: 100,
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
