@@ -59,8 +59,20 @@ class _HomeScreenState extends State<HomeScreen> {
     futureMovie = fetchMovies();
   }
 
+  int getItemCount(double screenWidth) {
+    if (screenWidth > 1000) {
+      return 5;
+    } else if (screenWidth > 700) {
+      return 4;
+    } else {
+      return 3;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Movie App'),
@@ -72,28 +84,17 @@ class _HomeScreenState extends State<HomeScreen> {
             if (snapshot.hasData) {
               List<Movie>? movies = snapshot.data;
               return GridView.count(
-                crossAxisCount: 3,
+                crossAxisCount: getItemCount(screenWidth),
+                mainAxisSpacing: 0,
+                shrinkWrap: true,
                 children: List.generate(movies!.length, (index) {
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Card(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Image.network(
-                              "$TMDB_WEB_URL${movies[index].posterPath}",
-                            ),
-                          ),
-                          Text(
-                            movies[index].title,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Quicksand',
-                            ),
-                          ),
-                        ],
+                      child: GridTile(
+                        child: Image.network(
+                          "$TMDB_WEB_URL${movies[index].posterPath}",
+                        ),
                       ),
                     ),
                   );
