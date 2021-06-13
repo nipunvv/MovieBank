@@ -38,7 +38,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> popularMovies;
-  late Future<List<Movie>> latestMovies;
   late ScrollController _scrollController;
   double _scrollPosition = 0;
   double _opacity = 0;
@@ -75,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController.addListener(_scrollListener);
     super.initState();
     popularMovies = fetchMovies(0);
-    latestMovies = fetchMovies(1);
   }
 
   void handleCategoryChange(int index) {
@@ -149,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 30,
                   ),
                   FutureBuilder<List<Movie>>(
                     future: popularMovies,
@@ -158,24 +156,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         List<Movie>? movies = snapshot.data;
                         return CarouselSlider(
                           options: CarouselOptions(
-                            height: MediaQuery.of(context).size.height * 0.4,
+                            height: MediaQuery.of(context).size.height * 0.6,
                             viewportFraction: 0.2,
-                            enlargeCenterPage: true,
+                            enlargeCenterPage: false,
                             enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                            disableCenter: true,
-                            aspectRatio: 2.0,
+                            disableCenter: false,
+                            aspectRatio: 16 / 9,
                             initialPage: 0,
                           ),
                           items: movies!.map((item) {
                             return Builder(
                               builder: (BuildContext context) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
                                   child: Image.network(
                                     "$TMDB_WEB_URL${item.posterPath}",
+                                    fit: BoxFit.cover,
                                   ),
                                 );
                               },
