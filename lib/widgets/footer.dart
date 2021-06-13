@@ -6,7 +6,7 @@ class Footer extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(30),
-      color: Colors.blueGrey,
+      color: Color(0xff161b2e),
       child: Column(
         children: [
           Text(

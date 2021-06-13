@@ -17,7 +17,7 @@ class _TopBarContentsState extends State<TopBarContents> {
     return PreferredSize(
       preferredSize: Size(screenSize.width, 1000),
       child: Container(
-        color: Colors.blueGrey.withOpacity(widget.opacity),
+        color: Color(0xff161b2e).withOpacity(widget.opacity),
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Row(
@@ -29,7 +29,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                   color: Colors.blueGrey[100],
                   fontSize: 20,
                   fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w700,
                   letterSpacing: 3,
                 ),
               ),
