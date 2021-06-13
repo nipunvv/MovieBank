@@ -7,7 +7,7 @@ class Movie {
   final double voteAvg;
   final double voteCount;
   final String releaseDate;
-  List<dynamic> genreIds;
+  dynamic genreIds;
 
   Movie({
     required this.id,

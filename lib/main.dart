@@ -7,6 +7,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_bank/screens/movie_detail.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:movie_bank/widgets/web_scrollbar.dart';
@@ -170,9 +171,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (BuildContext context) {
                                 return ClipRRect(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.network(
-                                    "$TMDB_WEB_URL${item.posterPath}",
-                                    fit: BoxFit.cover,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MovieDetail(item.id),
+                                        ),
+                                      );
+                                    },
+                                    child: Image.network(
+                                      "$TMDB_WEB_URL${item.posterPath}",
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 );
                               },
