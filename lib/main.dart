@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              MovieDetail(item.id),
+                                              MovieDetail(item),
                                         ),
                                       );
                                     },

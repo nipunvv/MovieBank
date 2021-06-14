@@ -9,34 +9,22 @@ import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:http/http.dart' as http;
 
 class MovieDetail extends StatefulWidget {
-  final int id;
-  MovieDetail(this.id);
+  final Movie movie;
+  MovieDetail(this.movie);
 
   @override
   _MovieDetailState createState() => _MovieDetailState();
 }
 
 class _MovieDetailState extends State<MovieDetail> {
-  late Future<Movie> futureMovie;
-
-  Future<Movie> fetchMovieDetails() async {
-    String url = "${TMDB_API_URL}movie/${widget.id}";
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
-    );
-
-    if (response.statusCode == 200) {
-      return Movie.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load Movie Details');
-    }
-  }
+  late Movie movie;
 
   @override
   void initState() {
     super.initState();
-    futureMovie = fetchMovieDetails();
+    setState(() {
+      movie = widget.movie;
+    });
   }
 
   @override
@@ -47,41 +35,70 @@ class _MovieDetailState extends State<MovieDetail> {
         child: TopBarContents(1),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            FutureBuilder<Movie>(
-              future: futureMovie,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  Movie? movie = snapshot.data;
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Image.network(
-                        "$TMDB_WEB_URL${movie!.posterPath}",
-                        fit: BoxFit.cover,
-                      ),
+        child: Container(
+          color: Colors.indigo[800],
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Image.network(
+                      "$TMDB_WEB_URL${movie!.backDropPath}",
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      color: const Color.fromRGBO(255, 255, 255, 0.5),
+                      colorBlendMode: BlendMode.modulate,
                     ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-
-                return SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Center(
-                    child: CircularProgressIndicator(),
                   ),
-                );
-              },
-            ),
-            SizedBox(
-              height: 200,
-            ),
-            Footer(),
-          ],
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        movie.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        movie.language,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: Text(
+                          movie.overview,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Quicksand',
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 200,
+              ),
+              Footer(),
+            ],
+          ),
         ),
       ),
     );
