@@ -8,10 +8,12 @@ import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
-  MovieDetail(this.movie);
+  final List<String> genres;
+  MovieDetail(this.movie, this.genres);
 
   @override
   _MovieDetailState createState() => _MovieDetailState();
@@ -96,7 +98,9 @@ class _MovieDetailState extends State<MovieDetail> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
-                                  movie.language,
+                                  LocaleNames.of(context)!
+                                      .nameOf(movie.language)
+                                      .toString(),
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'Montserrat',

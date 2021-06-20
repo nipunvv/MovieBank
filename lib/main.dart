@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
@@ -26,6 +27,9 @@ class MovieBank extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomeScreen(title: 'Movie Bank'),
+      localizationsDelegates: [
+        LocaleNamesLocalizationsDelegate(),
+      ],
     );
   }
 }
@@ -41,7 +45,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> popularMovies;
-  late Future<List<Movie>> genres;
+  late Future<List<Genre>> genres;
   late ScrollController _scrollController;
   double _scrollPosition = 0;
   double _opacity = 0;
@@ -97,12 +101,19 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController.addListener(_scrollListener);
     super.initState();
     popularMovies = fetchMovies(0);
+    genres = fetchGenres();
   }
 
   void handleCategoryChange(int index) {
     setState(() {
       popularMovies = fetchMovies(index);
     });
+  }
+
+  List<String> getMovieGenres(Future<List<Genre>> genres) {
+    List<String> movieGenres = [];
+    // genres.
+    return movieGenres;
   }
 
   @override
@@ -197,8 +208,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              MovieDetail(item),
+                                          builder: (context) => MovieDetail(
+                                            item,
+                                            getMovieGenres(genres),
+                                          ),
                                         ),
                                       );
                                     },
