@@ -9,14 +9,26 @@ import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_bank/models/genre.dart';
+import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/screens/movie_detail.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:movie_bank/widgets/web_scrollbar.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 void main() {
-  runApp(MovieBank());
+  runApp(
+    MultiProvider(
+      providers: providers,
+      child: MovieBank(),
+    ),
+  );
 }
+
+List<SingleChildWidget> providers = [
+  ChangeNotifierProvider<GenreProvider>(create: (_) => GenreProvider()),
+];
 
 class MovieBank extends StatelessWidget {
   @override
@@ -45,7 +57,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> popularMovies;
-  late Future<List<Genre>> genres;
   late ScrollController _scrollController;
   double _scrollPosition = 0;
   double _opacity = 0;
@@ -70,25 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<List<Genre>> fetchGenres() async {
-    String url = "${TMDB_API_URL}genre/movie/list";
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
-    );
-
-    if (response.statusCode == 200) {
-      List<Genre> genres = [];
-      for (Map<String, dynamic> genre in jsonDecode(response.body)['genres']) {
-        genres.add(Genre.fromJson(genre));
-      }
-
-      return genres;
-    } else {
-      throw Exception('Failed to load genres');
-    }
-  }
-
   _scrollListener() {
     setState(() {
       _scrollPosition = _scrollController.position.pixels;
@@ -101,19 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController.addListener(_scrollListener);
     super.initState();
     popularMovies = fetchMovies(0);
-    genres = fetchGenres();
+    final genreModel = Provider.of<GenreProvider>(context, listen: false);
+    genreModel.getPostData();
   }
 
   void handleCategoryChange(int index) {
     setState(() {
       popularMovies = fetchMovies(index);
     });
-  }
-
-  List<String> getMovieGenres(Future<List<Genre>> genres) {
-    List<String> movieGenres = [];
-    // genres.
-    return movieGenres;
   }
 
   @override
@@ -210,7 +197,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => MovieDetail(
                                             item,
-                                            getMovieGenres(genres),
                                           ),
                                         ),
                                       );

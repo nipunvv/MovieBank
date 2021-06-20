@@ -1,19 +1,17 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
+import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
-  final List<String> genres;
-  MovieDetail(this.movie, this.genres);
+  MovieDetail(this.movie);
 
   @override
   _MovieDetailState createState() => _MovieDetailState();
@@ -32,6 +30,8 @@ class _MovieDetailState extends State<MovieDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final genreModel = Provider.of<GenreProvider>(context);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(MediaQuery.of(context).size.width, 1000),
@@ -74,9 +74,7 @@ class _MovieDetailState extends State<MovieDetail> {
                               movie.title.toUpperCase(),
                               style: TextStyle(
                                 color: Colors.black,
-                                // fontFamily: 'Montserrat',
                                 fontSize: 26,
-                                // fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -139,6 +137,11 @@ class _MovieDetailState extends State<MovieDetail> {
                           SizedBox(
                             height: 20,
                           ),
+                          genreModel.genres.length != 0
+                              ? Container(
+                                  child: Text('Genres Loaded'),
+                                )
+                              : Text('Not Loaded'),
                           Text(
                             'OVERVIEW',
                             style: TextStyle(
