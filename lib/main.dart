@@ -7,6 +7,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/screens/movie_detail.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
@@ -40,6 +41,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> popularMovies;
+  late Future<List<Movie>> genres;
   late ScrollController _scrollController;
   double _scrollPosition = 0;
   double _opacity = 0;
@@ -61,6 +63,25 @@ class _HomeScreenState extends State<HomeScreen> {
       return movies;
     } else {
       throw Exception('Failed to load Movie');
+    }
+  }
+
+  Future<List<Genre>> fetchGenres() async {
+    String url = "${TMDB_API_URL}genre/movie/list";
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
+    );
+
+    if (response.statusCode == 200) {
+      List<Genre> genres = [];
+      for (Map<String, dynamic> genre in jsonDecode(response.body)['genres']) {
+        genres.add(Genre.fromJson(genre));
+      }
+
+      return genres;
+    } else {
+      throw Exception('Failed to load genres');
     }
   }
 
