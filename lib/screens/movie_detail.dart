@@ -1,14 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
+import 'package:movie_bank/models/cast.dart';
 import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:math' as math;
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
@@ -20,6 +25,7 @@ class MovieDetail extends StatefulWidget {
 
 class _MovieDetailState extends State<MovieDetail> {
   late Movie movie;
+  late Future<List<Cast>> cast;
 
   @override
   void initState() {
@@ -27,6 +33,7 @@ class _MovieDetailState extends State<MovieDetail> {
     setState(() {
       movie = widget.movie;
     });
+    cast = fetchCast();
   }
 
   List<Color> colors = [
@@ -35,6 +42,26 @@ class _MovieDetailState extends State<MovieDetail> {
     Colors.red.shade400,
     Colors.orange.shade400,
   ];
+
+  Future<List<Cast>> fetchCast() async {
+    String url = "${TMDB_API_URL}movie/${movie.id}/credits";
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
+    );
+
+    if (response.statusCode == 200) {
+      List<Cast> casts = [];
+      for (Map<String, dynamic> cast in jsonDecode(response.body)['cast']) {
+        Cast c = Cast.fromJson(cast);
+        casts.add(c);
+      }
+
+      return casts;
+    } else {
+      throw Exception('Failed to load cast');
+    }
+  }
 
   Widget getGenres(List<Genre> genres) {
     if (!(movie.genreIds is List)) return Container();
@@ -214,6 +241,64 @@ class _MovieDetailState extends State<MovieDetail> {
                                 fontSize: 14,
                               ),
                             ),
+                          ),
+                          FutureBuilder<List<Cast>>(
+                            future: cast,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                List<Cast>? casts = snapshot.data;
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Text(
+                                      'CAST',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Quicksand',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        if (casts != null)
+                                          for (int i = 0;
+                                              i < math.min(casts.length, 8);
+                                              i++)
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                right: 7,
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 30,
+                                                backgroundImage: NetworkImage(
+                                                  "$TMDB_WEB_URL${casts[i].avatar}",
+                                                ),
+                                              ),
+                                            )
+                                      ],
+                                    )
+                                  ],
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text("${snapshot.error}");
+                              }
+
+                              return SizedBox(
+                                height: 100,
+                                width: 100,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

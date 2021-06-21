@@ -8,7 +8,6 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:http/http.dart' as http;
-import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/screens/movie_detail.dart';
 import 'package:movie_bank/widgets/footer.dart';
