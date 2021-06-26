@@ -14,6 +14,7 @@ import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
+import 'package:shimmer/shimmer.dart';
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
@@ -276,10 +277,13 @@ class _MovieDetailState extends State<MovieDetail> {
                                               margin: EdgeInsets.only(
                                                 right: 7,
                                               ),
-                                              child: CircleAvatar(
-                                                radius: 30,
-                                                backgroundImage: NetworkImage(
-                                                  "$TMDB_WEB_URL${casts[i].avatar}",
+                                              child: Tooltip(
+                                                message: casts[i].name,
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundImage: NetworkImage(
+                                                    "$TMDB_WEB_URL${casts[i].avatar}",
+                                                  ),
                                                 ),
                                               ),
                                             )
@@ -291,12 +295,43 @@ class _MovieDetailState extends State<MovieDetail> {
                                 return Text("${snapshot.error}");
                               }
 
-                              return SizedBox(
-                                height: 100,
-                                width: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    'CAST',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'Quicksand',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      for (int i = 0; i < 5; i++)
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                            right: 7,
+                                            top: 10,
+                                          ),
+                                          child: Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
                               );
                             },
                           ),
