@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
@@ -27,6 +28,7 @@ class MovieDetail extends StatefulWidget {
 class _MovieDetailState extends State<MovieDetail> {
   late Movie movie;
   late Future<List<Cast>> cast;
+  late Future<List<Movie>> similarMovies;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _MovieDetailState extends State<MovieDetail> {
       movie = widget.movie;
     });
     cast = fetchCast();
+    similarMovies = fetchSimilarMovies();
   }
 
   List<Color> colors = [
@@ -61,6 +64,25 @@ class _MovieDetailState extends State<MovieDetail> {
       return casts;
     } else {
       throw Exception('Failed to load cast');
+    }
+  }
+
+  Future<List<Movie>> fetchSimilarMovies() async {
+    String url = "${TMDB_API_URL}movie/${movie.id}/similar";
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
+    );
+
+    if (response.statusCode == 200) {
+      List<Movie> movies = [];
+      for (Map<String, dynamic> movie in jsonDecode(response.body)['results']) {
+        movies.add(Movie.fromJson(movie));
+      }
+
+      return movies;
+    } else {
+      throw Exception('Failed to load similar movies');
     }
   }
 
@@ -343,7 +365,93 @@ class _MovieDetailState extends State<MovieDetail> {
                 ),
               ),
               SizedBox(
-                height: 200,
+                height: 50,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SIMILAR MOVIES',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Quicksand',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    FutureBuilder<List<Movie>>(
+                      future: similarMovies,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Movie>? movies = snapshot.data;
+                          return CarouselSlider(
+                            options: CarouselOptions(
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              viewportFraction: 0.12,
+                              enlargeCenterPage: false,
+                              enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                              disableCenter: false,
+                              aspectRatio: 16 / 9,
+                              initialPage: 0,
+                            ),
+                            items: movies!.map((item) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  if (item.posterPath != '') {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => MovieDetail(
+                                                item,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Image.network(
+                                          "$TMDB_WEB_URL/w185/${item.posterPath}",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              );
+                            }).toList(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+
+                        return SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 50,
               ),
               Footer(),
             ],
