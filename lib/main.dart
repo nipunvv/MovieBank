@@ -70,8 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (response.statusCode == 200) {
       List<Movie> movies = [];
+      Movie m;
       for (Map<String, dynamic> movie in jsonDecode(response.body)['results']) {
-        movies.add(Movie.fromJson(movie));
+        m = Movie.fromJson(movie);
+        if (m.releaseDate != '') movies.add(m);
       }
 
       return movies;
