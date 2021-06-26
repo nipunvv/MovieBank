@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       return movies;
     } else {
-      throw Exception('Failed to load Movie');
+      throw Exception('Failed to load Movies');
     }
   }
 
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                                     },
                                     child: Image.network(
-                                      "$TMDB_WEB_URL${item.posterPath}",
+                                      "$TMDB_WEB_URL/w342/${item.posterPath}",
                                       fit: BoxFit.cover,
                                     ),
                                   ),

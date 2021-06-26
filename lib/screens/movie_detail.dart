@@ -121,7 +121,8 @@ class _MovieDetailState extends State<MovieDetail> {
             children: [
               Container(
                 margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05),
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -130,7 +131,7 @@ class _MovieDetailState extends State<MovieDetail> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: Image.network(
-                          "$TMDB_WEB_URL${movie.posterPath}",
+                          "$TMDB_WEB_URL/w780/${movie.posterPath}",
                           fit: BoxFit.cover,
                           width: MediaQuery.of(context).size.width * 0.3,
                           height: MediaQuery.of(context).size.height * 0.8,
@@ -282,11 +283,11 @@ class _MovieDetailState extends State<MovieDetail> {
                                                 child: CircleAvatar(
                                                   radius: 30,
                                                   backgroundImage: NetworkImage(
-                                                    "$TMDB_WEB_URL${casts[i].avatar}",
+                                                    "$TMDB_WEB_URL/w185/${casts[i].avatar}",
                                                   ),
                                                 ),
                                               ),
-                                            )
+                                            ),
                                       ],
                                     )
                                   ],
