@@ -86,6 +86,11 @@ class _MovieDetailState extends State<MovieDetail> {
     }
   }
 
+  List<Movie> getValidMovies(List<Movie>? movies) {
+    if (movies == null) return [];
+    return movies.where((element) => element.posterPath != '').toList();
+  }
+
   Widget getGenres(List<Genre> genres) {
     if (!(movie.genreIds is List)) return Container();
     List<dynamic> genreIds = movie.genreIds;
@@ -404,7 +409,7 @@ class _MovieDetailState extends State<MovieDetail> {
                               aspectRatio: 16 / 9,
                               initialPage: 0,
                             ),
-                            items: movies!.map((item) {
+                            items: getValidMovies(movies).map((item) {
                               return Builder(
                                 builder: (BuildContext context) {
                                   if (item.posterPath != '') {
