@@ -28,12 +28,12 @@ class Movie {
       id: json['id'],
       language: json['original_language'],
       title: json['original_title'],
-      overview: json['overview'],
-      posterPath: json['poster_path'],
-      backDropPath: json['backdrop_path'],
+      overview: json['overview'] ?? '',
+      posterPath: json['poster_path'] ?? '',
+      backDropPath: json['backdrop_path'] ?? '',
       voteAvg: json['vote_average'],
       voteCount: json['vote_count'],
-      releaseDate: json['release_date'],
+      releaseDate: json['release_date'] ?? '',
       genreIds: json['genre_ids'],
     );
   }
