@@ -91,6 +91,44 @@ class _MovieDetailState extends State<MovieDetail> {
     return movies.where((element) => element.posterPath != '').toList();
   }
 
+  Widget getMovieDetails(String type, String content) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 5,
+      ),
+      decoration: BoxDecoration(
+        color: Color(0xffd3d3d3),
+        border: Border.all(
+          color: Color(0xffd3d3d3),
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            type == 'language' ? Icons.language : Icons.calendar_today,
+            size: 18,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            type == 'language'
+                ? LocaleNames.of(context)!.nameOf(content).toString()
+                : content,
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Montserrat',
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget getGenres(List<Genre> genres) {
     if (!(movie.genreIds is List)) return Container();
     List<dynamic> genreIds = movie.genreIds;
@@ -189,55 +227,11 @@ class _MovieDetailState extends State<MovieDetail> {
                           ),
                           Row(
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Color(0xffd3d3d3),
-                                  border: Border.all(
-                                    color: Color(0xffd3d3d3),
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  LocaleNames.of(context)!
-                                      .nameOf(movie.language)
-                                      .toString(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              getMovieDetails('language', movie.language),
                               SizedBox(
                                 width: 10,
                               ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Color(0xffd3d3d3),
-                                  border: Border.all(
-                                    color: Color(0xffd3d3d3),
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  movie.releaseDate,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              getMovieDetails('release', movie.releaseDate),
                             ],
                           ),
                           SizedBox(
