@@ -36,8 +36,8 @@ class _MovieDetailState extends State<MovieDetail> {
     setState(() {
       movie = widget.movie;
     });
-    cast = fetchCast();
-    similarMovies = fetchSimilarMovies();
+    cast = fetchCast(widget.movie.id);
+    similarMovies = fetchSimilarMovies(widget.movie.id);
   }
 
   List<Color> colors = [
@@ -47,8 +47,8 @@ class _MovieDetailState extends State<MovieDetail> {
     Colors.orange.shade400,
   ];
 
-  Future<List<Cast>> fetchCast() async {
-    String url = "${TMDB_API_URL}movie/${movie.id}/credits";
+  Future<List<Cast>> fetchCast(movieId) async {
+    String url = "${TMDB_API_URL}movie/$movieId/credits";
     final response = await http.get(
       Uri.parse(url),
       headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
@@ -67,8 +67,8 @@ class _MovieDetailState extends State<MovieDetail> {
     }
   }
 
-  Future<List<Movie>> fetchSimilarMovies() async {
-    String url = "${TMDB_API_URL}movie/${movie.id}/similar";
+  Future<List<Movie>> fetchSimilarMovies(movieId) async {
+    String url = "${TMDB_API_URL}movie/$movieId/similar";
     final response = await http.get(
       Uri.parse(url),
       headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
@@ -411,14 +411,12 @@ class _MovieDetailState extends State<MovieDetail> {
                                       borderRadius: BorderRadius.circular(10.0),
                                       child: InkWell(
                                         onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => MovieDetail(
-                                                item,
-                                              ),
-                                            ),
-                                          );
+                                          setState(() {
+                                            movie = item;
+                                            cast = fetchCast(item.id);
+                                            similarMovies =
+                                                fetchSimilarMovies(item.id);
+                                          });
                                         },
                                         child: Image.network(
                                           "$TMDB_WEB_URL/w185/${item.posterPath}",
