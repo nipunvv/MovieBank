@@ -12,6 +12,7 @@ import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
@@ -171,6 +172,46 @@ class _MovieDetailState extends State<MovieDetail> {
     return Container();
   }
 
+  Widget ratingContainer(ratingPercentage, voteCount) {
+    return Row(
+      children: [
+        Stack(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xff032541),
+              ),
+            ),
+            Container(
+              width: 60,
+              height: 60,
+              child: CircularPercentIndicator(
+                radius: 55.0,
+                lineWidth: 3.0,
+                percent: ratingPercentage / 100,
+                center: Text(
+                  '$ratingPercentage%',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                backgroundColor: Color(0xff204529),
+                progressColor: Color(0xff21d07a),
+              ),
+            )
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text('From $voteCount votes'),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final genreModel = Provider.of<GenreProvider>(context);
@@ -239,6 +280,10 @@ class _MovieDetailState extends State<MovieDetail> {
                           ),
                           if (genreModel.genres.length != 0)
                             getGenres(genreModel.genres),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          ratingContainer(movie.voteAvg * 10, movie.voteCount),
                           SizedBox(
                             height: 20,
                           ),
