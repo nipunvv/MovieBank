@@ -292,13 +292,24 @@ class _MovieDetailState extends State<MovieDetail> {
                                   ),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: TextButton(
-                                  child: Text('Search on Pahe.ph'),
-                                  onPressed: () {
-                                    js.context.callMethod('open', [
-                                      'https://pahe.ph/?s=${getSearchableString(movie.title)}'
-                                    ]);
-                                  },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.search,
+                                      size: 18,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    TextButton(
+                                      child: Text('Search on Pahe.ph'),
+                                      onPressed: () {
+                                        js.context.callMethod('open', [
+                                          'https://pahe.ph/?s=${getSearchableString(movie.title)}'
+                                        ]);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
