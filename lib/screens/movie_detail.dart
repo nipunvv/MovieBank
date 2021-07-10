@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'dart:js' as js;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,11 @@ class _MovieDetailState extends State<MovieDetail> {
   List<Movie> getValidMovies(List<Movie>? movies) {
     if (movies == null) return [];
     return movies.where((element) => element.posterPath != '').toList();
+  }
+
+  String getSearchableString(String title) {
+    print('REPLACED ${title.replaceAll(RegExp('\s'), '+')}');
+    return title.replaceAll(RegExp('\s'), '+');
   }
 
   Widget getMovieDetails(String type, String content) {
@@ -273,6 +279,29 @@ class _MovieDetailState extends State<MovieDetail> {
                                 width: 10,
                               ),
                               getMovieDetails('release', movie.releaseDate),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Color(0xffd3d3d3),
+                                  border: Border.all(
+                                    color: Color(0xffd3d3d3),
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: TextButton(
+                                  child: Text('Search on Pahe.ph'),
+                                  onPressed: () {
+                                    js.context.callMethod('open', [
+                                      'https://pahe.ph/?s=${getSearchableString(movie.title)}'
+                                    ]);
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(
