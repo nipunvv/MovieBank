@@ -94,8 +94,7 @@ class _MovieDetailState extends State<MovieDetail> {
   }
 
   String getSearchableString(String title) {
-    print('REPLACED ${title.replaceAll(RegExp('\s'), '+')}');
-    return title.replaceAll(RegExp('\s'), '+');
+    return title.replaceAll(RegExp('\\s'), '+');
   }
 
   Widget getMovieDetails(String type, String content) {
