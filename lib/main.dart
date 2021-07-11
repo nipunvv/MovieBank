@@ -57,9 +57,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> popularMovies;
+  late Future<List<Movie>> searchedMovies = Future<List<Movie>>.value([]);
   late ScrollController _scrollController;
   double _scrollPosition = 0;
   double _opacity = 0;
+  bool isSearching = false;
+  List<Movie> searchResults = [];
 
   Future<List<Movie>> fetchMovies(int index) async {
     String url =
@@ -105,6 +108,33 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  searchMovies(String keyword) async {
+    setState(() {
+      isSearching = true;
+    });
+    String url = "${TMDB_API_URL}search/movie?query=$keyword";
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
+    );
+
+    if (response.statusCode == 200) {
+      List<Movie> movies = [];
+      Movie m;
+      for (Map<String, dynamic> movie in jsonDecode(response.body)['results']) {
+        m = Movie.fromJson(movie);
+        if (m.releaseDate != '') movies.add(m);
+      }
+
+      setState(() {
+        isSearching = false;
+        searchResults = movies;
+      });
+    } else {
+      throw Exception('Failed to load Movies');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -116,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: TopBarContents(_opacity),
+        child: TopBarContents(_opacity, searchMovies),
       ),
       body: WebScrollbar(
         color: Colors.blueGrey,
@@ -226,6 +256,54 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  if (isSearching)
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  if (searchResults.length > 0)
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        viewportFraction: 0.2,
+                        enlargeCenterPage: false,
+                        enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                        disableCenter: false,
+                        aspectRatio: 16 / 9,
+                        initialPage: 0,
+                      ),
+                      items: searchResults.map((item) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MovieDetail(
+                                        item,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Image.network(
+                                  "$TMDB_WEB_URL/w342/${item.posterPath}",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
                   SizedBox(
                     height: 50,
                   ),

@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
+  final Function searchMovies;
 
-  TopBarContents(this.opacity);
+  TopBarContents(this.opacity, this.searchMovies);
 
   @override
   _TopBarContentsState createState() => _TopBarContentsState();
 }
 
 class _TopBarContentsState extends State<TopBarContents> {
+  final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -42,7 +51,12 @@ class _TopBarContentsState extends State<TopBarContents> {
                       height: 30,
                       child: Center(
                         child: TextField(
+                          controller: myController,
                           showCursor: false,
+                          textInputAction: TextInputAction.go,
+                          onSubmitted: (value) {
+                            widget.searchMovies(value);
+                          },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -71,7 +85,7 @@ class _TopBarContentsState extends State<TopBarContents> {
                         child: InkWell(
                           customBorder: new CircleBorder(),
                           onTap: () {
-                            print('SEARCHING');
+                            widget.searchMovies(myController.text);
                           },
                           child: Icon(
                             Icons.search,

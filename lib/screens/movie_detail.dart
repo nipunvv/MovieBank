@@ -222,9 +222,9 @@ class _MovieDetailState extends State<MovieDetail> {
     final genreModel = Provider.of<GenreProvider>(context);
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(MediaQuery.of(context).size.width, 1000),
-        child: TopBarContents(1),
+      appBar: AppBar(
+        title: Text('MOVIE BANK'),
+        backgroundColor: Color(0xff161b2e),
       ),
       body: SingleChildScrollView(
         child: Container(
