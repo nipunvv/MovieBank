@@ -41,6 +41,7 @@ class MovieBank extends StatelessWidget {
       localizationsDelegates: [
         LocaleNamesLocalizationsDelegate(),
       ],
+      debugShowCheckedModeBanner: false,
     );
   }
 }
