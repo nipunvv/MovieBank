@@ -22,6 +22,7 @@ class _TopBarContentsState extends State<TopBarContents> {
           padding: EdgeInsets.all(20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'MOVIE BANK',
@@ -36,6 +37,21 @@ class _TopBarContentsState extends State<TopBarContents> {
               SizedBox(
                 width: screenSize.width / 50,
               ),
+              if (widget.opacity == 1)
+                SizedBox(
+                  height: 20,
+                  child: IconButton(
+                    onPressed: () {
+                      print('SEARCHING');
+                    },
+                    padding: EdgeInsets.all(0.0),
+                    iconSize: 18,
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
