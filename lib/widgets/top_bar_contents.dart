@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:movie_bank/screens/search_results.dart';
 
 class TopBarContents extends StatefulWidget {
   final double opacity;
-  final Function searchMovies;
 
-  TopBarContents(this.opacity, this.searchMovies);
+  TopBarContents(this.opacity);
 
   @override
   _TopBarContentsState createState() => _TopBarContentsState();
@@ -43,60 +43,30 @@ class _TopBarContentsState extends State<TopBarContents> {
                   letterSpacing: 3,
                 ),
               ),
-              if (widget.opacity == 1)
-                Row(
-                  children: [
-                    Container(
-                      width: 250,
-                      height: 30,
-                      child: Center(
-                        child: TextField(
-                          controller: myController,
-                          showCursor: false,
-                          textInputAction: TextInputAction.go,
-                          onSubmitted: (value) {
-                            widget.searchMovies(value);
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 5.0),
-                          ),
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 14,
-                          ),
+              Container(
+                width: 30,
+                height: 30,
+                margin: EdgeInsets.only(left: 5),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    customBorder: new CircleBorder(),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchResults(),
                         ),
-                      ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 18,
                     ),
-                    Container(
-                      width: 30,
-                      height: 30,
-                      margin: EdgeInsets.only(left: 5),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          customBorder: new CircleBorder(),
-                          onTap: () {
-                            widget.searchMovies(myController.text);
-                          },
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
+              ),
             ],
           ),
         ),
