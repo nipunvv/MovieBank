@@ -34,23 +34,54 @@ class _TopBarContentsState extends State<TopBarContents> {
                   letterSpacing: 3,
                 ),
               ),
-              SizedBox(
-                width: screenSize.width / 50,
-              ),
               if (widget.opacity == 1)
-                SizedBox(
-                  height: 20,
-                  child: IconButton(
-                    onPressed: () {
-                      print('SEARCHING');
-                    },
-                    padding: EdgeInsets.all(0.0),
-                    iconSize: 18,
-                    icon: Icon(
-                      Icons.search,
-                      color: Colors.white,
+                Row(
+                  children: [
+                    Container(
+                      width: 250,
+                      height: 30,
+                      child: Center(
+                        child: TextField(
+                          showCursor: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 15.0, horizontal: 5.0),
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      width: 30,
+                      height: 30,
+                      margin: EdgeInsets.only(left: 5),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          customBorder: new CircleBorder(),
+                          onTap: () {
+                            print('SEARCHING');
+                          },
+                          child: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),
