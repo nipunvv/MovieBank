@@ -10,6 +10,7 @@ import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/models/cast.dart';
 import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
+import 'package:movie_bank/widgets/cast_shimmer.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
@@ -401,44 +402,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                 return Text("${snapshot.error}");
                               }
 
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    'CAST',
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'Quicksand',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      for (int i = 0; i < 5; i++)
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                            right: 7,
-                                            top: 10,
-                                          ),
-                                          child: Shimmer.fromColors(
-                                            baseColor: Colors.grey.shade300,
-                                            highlightColor:
-                                                Colors.grey.shade100,
-                                            child: CircleAvatar(
-                                              radius: 30,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ],
-                              );
+                              return CastShimmer();
                             },
                           ),
                         ],
