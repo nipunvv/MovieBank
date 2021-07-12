@@ -38,7 +38,6 @@ class _SearchResultsState extends State<SearchResults> {
         m = Movie.fromJson(movie);
         if (m.releaseDate != '' && m.posterPath != '') movies.add(m);
       }
-      print('SIZE => ${movies.length}');
 
       setState(() {
         isSearching = false;

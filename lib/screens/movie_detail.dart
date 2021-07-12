@@ -12,13 +12,11 @@ import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/widgets/cast_shimmer.dart';
 import 'package:movie_bank/widgets/footer.dart';
-import 'package:movie_bank/widgets/top_bar_contents.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:math' as math;
-import 'package:shimmer/shimmer.dart';
 
 class MovieDetail extends StatefulWidget {
   final Movie movie;
@@ -218,6 +216,14 @@ class _MovieDetailState extends State<MovieDetail> {
     );
   }
 
+  getBackgrondImage(imageUrl) {
+    if (imageUrl == '') {
+      return AssetImage('assets/images/avatar.jpg');
+    } else {
+      return NetworkImage("$TMDB_WEB_URL/w185/$imageUrl");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final genreModel = Provider.of<GenreProvider>(context);
@@ -388,8 +394,9 @@ class _MovieDetailState extends State<MovieDetail> {
                                                 message: casts[i].name,
                                                 child: CircleAvatar(
                                                   radius: 30,
-                                                  backgroundImage: NetworkImage(
-                                                    "$TMDB_WEB_URL/w185/${casts[i].avatar}",
+                                                  backgroundImage:
+                                                      getBackgrondImage(
+                                                    casts[i].avatar,
                                                   ),
                                                 ),
                                               ),
