@@ -158,6 +158,7 @@ class _SearchResultsState extends State<SearchResults> {
                       disableCenter: false,
                       aspectRatio: 16 / 9,
                       initialPage: 0,
+                      enableInfiniteScroll: results.length > 5 ? true : false,
                     ),
                     items: results.map((item) {
                       return Builder(
