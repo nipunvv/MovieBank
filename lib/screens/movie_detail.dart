@@ -121,7 +121,7 @@ class _MovieDetailState extends State<MovieDetail> {
           Text(
             type == 'language'
                 ? LocaleNames.of(context)!.nameOf(content).toString()
-                : content,
+                : content.substring(0, 4),
             style: TextStyle(
               color: Colors.black,
               fontFamily: 'Montserrat',
