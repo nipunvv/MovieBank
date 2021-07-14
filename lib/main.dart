@@ -12,7 +12,6 @@ import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/screens/movie_detail.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:movie_bank/widgets/top_bar_contents.dart';
-import 'package:movie_bank/widgets/web_scrollbar.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -118,120 +117,113 @@ class _HomeScreenState extends State<HomeScreen> {
         preferredSize: Size(screenSize.width, 1000),
         child: TopBarContents(_opacity),
       ),
-      body: WebScrollbar(
-        color: Colors.blueGrey,
-        backgroundColor: Colors.blueGrey.withOpacity(0.3),
-        width: 10,
-        heightFraction: 0.3,
+      body: SingleChildScrollView(
         controller: _scrollController,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: ClampingScrollPhysics(),
+        physics: ClampingScrollPhysics(),
+        child: Container(
           child: Container(
-            child: Container(
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        child: SizedBox(
-                          height: screenSize.height * 0.5,
-                          width: screenSize.width,
-                          child: Image.asset(
-                            'assets/images/cover.jpg',
-                            fit: BoxFit.cover,
-                          ),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      child: SizedBox(
+                        height: screenSize.height * 0.5,
+                        width: screenSize.width,
+                        child: Image.asset(
+                          'assets/images/cover.jpg',
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  FlutterToggleTab(
-                    width: 20,
-                    borderRadius: 20,
-                    height: 30,
-                    initialIndex: 0,
-                    selectedBackgroundColors: [Colors.blue],
-                    selectedTextStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
                     ),
-                    unSelectedTextStyle: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    labels: ["Popular", "Latest"],
-                    selectedLabelIndex: (index) {
-                      handleCategoryChange(index);
-                    },
+                  ],
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                FlutterToggleTab(
+                  width: 20,
+                  borderRadius: 20,
+                  height: 30,
+                  initialIndex: 0,
+                  selectedBackgroundColors: [Colors.blue],
+                  selectedTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                   ),
-                  SizedBox(
-                    height: 30,
+                  unSelectedTextStyle: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
-                  FutureBuilder<List<Movie>>(
-                    future: popularMovies,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<Movie>? movies = snapshot.data;
-                        return CarouselSlider(
-                          options: CarouselOptions(
-                            height: MediaQuery.of(context).size.height * 0.6,
-                            viewportFraction: 0.2,
-                            enlargeCenterPage: false,
-                            enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                            disableCenter: false,
-                            aspectRatio: 16 / 9,
-                            initialPage: 0,
-                          ),
-                          items: movies!.map((item) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MovieDetail(
-                                            item,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Image.network(
-                                      "$TMDB_WEB_URL/w342/${item.posterPath}",
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-
-                      return SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Center(
-                          child: CircularProgressIndicator(),
+                  labels: ["Popular", "Latest"],
+                  selectedLabelIndex: (index) {
+                    handleCategoryChange(index);
+                  },
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                FutureBuilder<List<Movie>>(
+                  future: popularMovies,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Movie>? movies = snapshot.data;
+                      return CarouselSlider(
+                        options: CarouselOptions(
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          viewportFraction: 0.2,
+                          enlargeCenterPage: false,
+                          enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                          disableCenter: false,
+                          aspectRatio: 16 / 9,
+                          initialPage: 0,
                         ),
+                        items: movies!.map((item) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MovieDetail(
+                                          item,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Image.network(
+                                    "$TMDB_WEB_URL/w342/${item.posterPath}",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
                       );
-                    },
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Footer(),
-                ],
-              ),
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+
+                    return SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Footer(),
+              ],
             ),
           ),
         ),
