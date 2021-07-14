@@ -195,9 +195,9 @@ class _MovieDetailState extends State<MovieDetail> {
               child: CircularPercentIndicator(
                 radius: 55.0,
                 lineWidth: 3.0,
-                percent: ratingPercentage / 100,
+                percent: double.parse(ratingPercentage),
                 center: Text(
-                  '$ratingPercentage%',
+                  '${double.parse(ratingPercentage) * 100}%',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -329,7 +329,10 @@ class _MovieDetailState extends State<MovieDetail> {
                           SizedBox(
                             height: 20,
                           ),
-                          ratingContainer(movie.voteAvg * 10, movie.voteCount),
+                          ratingContainer(
+                            (movie.voteAvg / 10).toStringAsFixed(2),
+                            movie.voteCount,
+                          ),
                           SizedBox(
                             height: 20,
                           ),
