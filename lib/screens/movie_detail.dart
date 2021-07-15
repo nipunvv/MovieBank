@@ -198,7 +198,7 @@ class _MovieDetailState extends State<MovieDetail> {
                 lineWidth: 3.0,
                 percent: double.parse(ratingPercentage),
                 center: Text(
-                  '${double.parse(ratingPercentage) * 100}%',
+                  '${(double.parse(ratingPercentage) * 100).round()}%',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -250,13 +250,13 @@ class _MovieDetailState extends State<MovieDetail> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: CachedNetworkImage(
-                            imageUrl: "$TMDB_WEB_URL/w780/${movie.posterPath}",
-                            fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width * 0.3,
+                          imageUrl: "$TMDB_WEB_URL/w780/${movie.posterPath}",
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width * 0.3,
                           height: MediaQuery.of(context).size.height * 0.8,
-                          ),
                         ),
                       ),
+                    ),
                     SizedBox(
                       width: 30,
                     ),
