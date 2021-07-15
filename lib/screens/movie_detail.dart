@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'dart:js' as js;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
@@ -248,14 +249,14 @@ class _MovieDetailState extends State<MovieDetail> {
                       padding: EdgeInsets.all(10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        child: Image.network(
-                          "$TMDB_WEB_URL/w780/${movie.posterPath}",
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width * 0.3,
+                        child: CachedNetworkImage(
+                            imageUrl: "$TMDB_WEB_URL/w780/${movie.posterPath}",
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width * 0.3,
                           height: MediaQuery.of(context).size.height * 0.8,
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(
                       width: 30,
                     ),
@@ -476,8 +477,9 @@ class _MovieDetailState extends State<MovieDetail> {
                                                 fetchSimilarMovies(item.id);
                                           });
                                         },
-                                        child: Image.network(
-                                          "$TMDB_WEB_URL/w185/${item.posterPath}",
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "$TMDB_WEB_URL/w185/${item.posterPath}",
                                           fit: BoxFit.cover,
                                         ),
                                       ),
