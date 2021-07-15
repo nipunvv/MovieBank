@@ -11,6 +11,7 @@ import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/models/cast.dart';
 import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
+import 'package:movie_bank/screens/search_results.dart';
 import 'package:movie_bank/widgets/cast_shimmer.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
@@ -233,6 +234,20 @@ class _MovieDetailState extends State<MovieDetail> {
       appBar: AppBar(
         title: Text('MOVIE BANK'),
         backgroundColor: Color(0xff161b2e),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchResults(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -249,11 +264,14 @@ class _MovieDetailState extends State<MovieDetail> {
                       padding: EdgeInsets.all(10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        child: CachedNetworkImage(
-                          imageUrl: "$TMDB_WEB_URL/w780/${movie.posterPath}",
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          height: MediaQuery.of(context).size.height * 0.8,
+                        child: Hero(
+                          tag: 'movie_image',
+                          child: CachedNetworkImage(
+                            imageUrl: "$TMDB_WEB_URL/w185/${movie.posterPath}",
+                            fit: BoxFit.cover,
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            height: MediaQuery.of(context).size.height * 0.8,
+                          ),
                         ),
                       ),
                     ),
