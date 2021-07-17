@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/models/cast.dart';
+import 'package:movie_bank/models/credit.dart';
 import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/screens/search_results.dart';
@@ -65,6 +66,22 @@ class _MovieDetailState extends State<MovieDetail> {
       }
 
       return casts;
+    } else {
+      throw Exception('Failed to load cast');
+    }
+  }
+
+  Future<Credit> fetchCastDetails(String creditId) async {
+    String url = "${TMDB_API_URL}credit/$creditId";
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
+    );
+
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      Credit credit = Credit.fromJson(jsonDecode(response.body));
+      return credit;
     } else {
       throw Exception('Failed to load cast');
     }
@@ -224,6 +241,21 @@ class _MovieDetailState extends State<MovieDetail> {
     } else {
       return NetworkImage("$TMDB_WEB_URL/w185/$imageUrl");
     }
+  }
+
+  showCastDetails(String creditId) {
+    late Future<Credit> castDetails = fetchCastDetails(creditId);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            height: MediaQuery.of(context).size.height * 0.7,
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -408,20 +440,26 @@ class _MovieDetailState extends State<MovieDetail> {
                                           for (int i = 0;
                                               i < math.min(casts.length, 8);
                                               i++)
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                right: 7,
-                                              ),
-                                              child: Tooltip(
-                                                message: casts[i].name,
-                                                child: CircleAvatar(
-                                                  radius: 30,
-                                                  backgroundImage:
-                                                      getBackgrondImage(
-                                                    casts[i].avatar,
+                                            InkWell(
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                  right: 7,
+                                                ),
+                                                child: Tooltip(
+                                                  message: casts[i].name,
+                                                  child: CircleAvatar(
+                                                    radius: 30,
+                                                    backgroundImage:
+                                                        getBackgrondImage(
+                                                      casts[i].avatar,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
+                                              onTap: () {
+                                                showCastDetails(
+                                                    casts[i].creditId);
+                                              },
                                             ),
                                       ],
                                     )
