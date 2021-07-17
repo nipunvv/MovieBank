@@ -56,9 +56,10 @@ class _SearchResultsState extends State<SearchResults> {
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
         child: Container(
+          height: 70,
           color: Color(0xff161b2e),
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,7 +96,7 @@ class _SearchResultsState extends State<SearchResults> {
                       child: Center(
                         child: TextField(
                           controller: myController,
-                          showCursor: false,
+                          showCursor: true,
                           textInputAction: TextInputAction.go,
                           onSubmitted: (value) {
                             searchMovies(value);
