@@ -265,9 +265,9 @@ class _MovieDetailState extends State<MovieDetail> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: Hero(
-                          tag: 'movie_image',
+                          tag: 'movie_image${movie.id}',
                           child: CachedNetworkImage(
-                            imageUrl: "$TMDB_WEB_URL/w185/${movie.posterPath}",
+                            imageUrl: "$TMDB_WEB_URL/w342/${movie.posterPath}",
                             fit: BoxFit.cover,
                             width: MediaQuery.of(context).size.width * 0.3,
                             height: MediaQuery.of(context).size.height * 0.8,

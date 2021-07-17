@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
@@ -196,9 +197,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     );
                                   },
-                                  child: Image.network(
-                                    "$TMDB_WEB_URL/w342/${item.posterPath}",
-                                    fit: BoxFit.cover,
+                                  child: Hero(
+                                    tag: 'movie_image${item.id}',
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "$TMDB_WEB_URL/w342/${item.posterPath}",
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               );
