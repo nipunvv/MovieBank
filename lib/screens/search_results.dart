@@ -63,15 +63,29 @@ class _SearchResultsState extends State<SearchResults> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'MOVIE BANK',
-                  style: TextStyle(
-                    color: Colors.blueGrey[100],
-                    fontSize: 20,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 3,
-                  ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.arrow_back),
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      'MOVIE BANK',
+                      style: TextStyle(
+                        color: Colors.blueGrey[100],
+                        fontSize: 20,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 3,
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [
@@ -96,7 +110,9 @@ class _SearchResultsState extends State<SearchResults> {
                             fillColor: Colors.white,
                             filled: true,
                             contentPadding: EdgeInsets.symmetric(
-                                vertical: 15.0, horizontal: 5.0),
+                              vertical: 10.0,
+                              horizontal: 5.0,
+                            ),
                           ),
                           style: TextStyle(
                             fontFamily: 'Montserrat',
