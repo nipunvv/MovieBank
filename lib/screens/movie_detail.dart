@@ -329,7 +329,7 @@ class _MovieDetailState extends State<MovieDetail> {
                           child: CachedNetworkImage(
                             imageUrl: "$TMDB_WEB_URL/w342/${movie.posterPath}",
                             fit: BoxFit.cover,
-                            width: MediaQuery.of(context).size.width * 0.3,
+                            width: MediaQuery.of(context).size.width * 0.26,
                             height: MediaQuery.of(context).size.height * 0.8,
                           ),
                         ),
