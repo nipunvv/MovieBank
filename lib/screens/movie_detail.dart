@@ -79,11 +79,10 @@ class _MovieDetailState extends State<MovieDetail> {
     );
 
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
       Credit credit = Credit.fromJson(jsonDecode(response.body));
       return credit;
     } else {
-      throw Exception('Failed to load cast');
+      throw Exception('Failed to load cast details');
     }
   }
 
@@ -243,15 +242,113 @@ class _MovieDetailState extends State<MovieDetail> {
     }
   }
 
-  showCastDetails(String creditId) {
-    late Future<Credit> castDetails = fetchCastDetails(creditId);
+  showCastDetails(Cast cast) {
+    Future<Credit> castDetails = fetchCastDetails(cast.creditId);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            width: MediaQuery.of(context).size.width * 0.4,
-            height: MediaQuery.of(context).size.height * 0.7,
+            width: MediaQuery.of(context).size.width * 0.25,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: FutureBuilder<Credit>(
+                future: castDetails,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Credit? credit = snapshot.data;
+                    return Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 40,
+                                backgroundImage: getBackgrondImage(
+                                  cast.avatar,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    cast.name,
+                                    style: TextStyle(
+                                      fontFamily: 'Quicksand',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    'as',
+                                    style: TextStyle(
+                                      fontFamily: 'Quicksand',
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  Text(
+                                    cast.character,
+                                    style: TextStyle(
+                                      fontFamily: 'Quicksand',
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'KNOWN FOR',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              for (var movie in credit!.knownFor)
+                                Container(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "$TMDB_WEB_URL/w185/${movie['poster_path']}",
+                                      fit: BoxFit.cover,
+                                      width: 90,
+                                      height: 120,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                }),
           ),
         );
       },
@@ -457,8 +554,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                                 ),
                                               ),
                                               onTap: () {
-                                                showCastDetails(
-                                                    casts[i].creditId);
+                                                showCastDetails(casts[i]);
                                               },
                                             ),
                                       ],
