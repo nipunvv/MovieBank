@@ -263,22 +263,23 @@ class _MovieDetailState extends State<MovieDetail> {
               maxHeight: MediaQuery.of(context).size.height * 0.5,
             ),
             child: FutureBuilder<Credit>(
-                future: castDetails,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    Credit? credit = snapshot.data;
-                    return ActorBrief(
-                        actor, credit, getBackgroundImage, changeMovie);
-                  } else {
-                    return Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                }),
+              future: castDetails,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  Credit? credit = snapshot.data;
+                  return ActorBrief(
+                      actor, credit, getBackgroundImage, changeMovie);
+                } else {
+                  return Center(
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         );
       },

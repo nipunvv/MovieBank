@@ -4,6 +4,7 @@ import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/models/cast.dart';
 import 'package:movie_bank/models/credit.dart';
+import 'package:movie_bank/screens/actor_detail.dart';
 
 class ActorBrief extends StatelessWidget {
   final Cast actor;
@@ -16,7 +17,6 @@ class ActorBrief extends StatelessWidget {
     this.getBackgroundImage,
     this.changeMovie,
   );
-  // const ActorBrief({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,12 @@ class ActorBrief extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                // TODO: go to actor page
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ActorDetail(actor.id)),
+                );
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(
