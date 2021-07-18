@@ -242,8 +242,8 @@ class _MovieDetailState extends State<MovieDetail> {
     }
   }
 
-  showCastDetails(Cast cast) {
-    Future<Credit> castDetails = fetchCastDetails(cast.creditId);
+  showCastDetails(Cast actor) {
+    Future<Credit> castDetails = fetchCastDetails(actor.creditId);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -269,7 +269,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                 CircleAvatar(
                                   radius: 35,
                                   backgroundImage: getBackgrondImage(
-                                    cast.avatar,
+                                    actor.avatar,
                                   ),
                                 ),
                                 SizedBox(
@@ -280,7 +280,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      cast.name,
+                                      actor.name,
                                       style: TextStyle(
                                         fontFamily: 'Quicksand',
                                         fontWeight: FontWeight.bold,
@@ -296,7 +296,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                       ),
                                     ),
                                     Text(
-                                      cast.character,
+                                      actor.character,
                                       style: TextStyle(
                                         fontFamily: 'Quicksand',
                                         fontWeight: FontWeight.normal,
@@ -324,16 +324,28 @@ class _MovieDetailState extends State<MovieDetail> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                for (var movie in credit!.knownFor)
+                                for (var item in credit!.knownFor)
                                   Container(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            "$TMDB_WEB_URL/w154/${movie['poster_path']}",
-                                        fit: BoxFit.cover,
-                                        width: 92,
-                                        height: 138,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          movie = Movie.fromJson(item);
+                                          cast = fetchCast(item['id']);
+                                          similarMovies =
+                                              fetchSimilarMovies(item['id']);
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "$TMDB_WEB_URL/w154/${item['poster_path']}",
+                                          fit: BoxFit.cover,
+                                          width: 92,
+                                          height: 138,
+                                        ),
                                       ),
                                     ),
                                   ),
