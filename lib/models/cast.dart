@@ -3,12 +3,14 @@ class Cast {
   final String name;
   final String avatar;
   final String creditId;
+  final String character;
 
   Cast({
     required this.id,
     required this.name,
     required this.avatar,
     required this.creditId,
+    required this.character,
   });
 
   factory Cast.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Cast {
       name: json['name'],
       avatar: json['profile_path'] ?? '',
       creditId: json['credit_id'],
+      character: json['character'],
     );
   }
 
