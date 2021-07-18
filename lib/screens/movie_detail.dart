@@ -13,6 +13,7 @@ import 'package:movie_bank/models/credit.dart';
 import 'package:movie_bank/models/genre.dart';
 import 'package:movie_bank/providers/provider.dart';
 import 'package:movie_bank/screens/search_results.dart';
+import 'package:movie_bank/widgets/actor_brief.dart';
 import 'package:movie_bank/widgets/cast_shimmer.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
@@ -234,12 +235,20 @@ class _MovieDetailState extends State<MovieDetail> {
     );
   }
 
-  getBackgrondImage(imageUrl) {
+  getBackgroundImage(imageUrl) {
     if (imageUrl == '') {
       return AssetImage('assets/images/avatar.jpg');
     } else {
       return NetworkImage("$TMDB_WEB_URL/w185/$imageUrl");
     }
+  }
+
+  changeMovie(Movie newMovie) {
+    setState(() {
+      movie = newMovie;
+      cast = fetchCast(newMovie.id);
+      similarMovies = fetchSimilarMovies(newMovie.id);
+    });
   }
 
   showCastDetails(Cast actor) {
@@ -258,149 +267,8 @@ class _MovieDetailState extends State<MovieDetail> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     Credit? credit = snapshot.data;
-                    return Wrap(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: getBackgrondImage(
-                                    actor.avatar,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      actor.name,
-                                      style: TextStyle(
-                                        fontFamily: 'Quicksand',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Text(
-                                      'as',
-                                      style: TextStyle(
-                                        fontFamily: 'Quicksand',
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    Text(
-                                      actor.character,
-                                      style: TextStyle(
-                                        fontFamily: 'Quicksand',
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              'ALSO KNOWN FOR',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                for (var item in credit!.knownFor)
-                                  Container(
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          movie = Movie.fromJson(item);
-                                          cast = fetchCast(item['id']);
-                                          similarMovies =
-                                              fetchSimilarMovies(item['id']);
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              "$TMDB_WEB_URL/w154/${item['poster_path']}",
-                                          fit: BoxFit.cover,
-                                          width: 92,
-                                          height: 138,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                // TODO: go to actor page
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 2,
-                                ),
-                                child: Text(
-                                  'View all movies',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontFamily: 'Quicksand',
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 2,
-                                  ),
-                                  child: Text(
-                                    'CLOSE',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.end,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
+                    return ActorBrief(
+                        actor, credit, getBackgroundImage, changeMovie);
                   } else {
                     return Center(
                       child: SizedBox(
@@ -609,7 +477,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                                   child: CircleAvatar(
                                                     radius: 30,
                                                     backgroundImage:
-                                                        getBackgrondImage(
+                                                        getBackgroundImage(
                                                       casts[i].avatar,
                                                     ),
                                                   ),
