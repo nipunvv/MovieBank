@@ -215,7 +215,9 @@ class _MovieDetailState extends State<MovieDetail> {
                       width: 30,
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.8,
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height * 0.8,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
