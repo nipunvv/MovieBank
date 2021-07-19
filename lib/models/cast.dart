@@ -4,6 +4,8 @@ class Cast {
   final String avatar;
   final String creditId;
   final String character;
+  final String department;
+  final String job;
 
   Cast({
     required this.id,
@@ -11,6 +13,8 @@ class Cast {
     required this.avatar,
     required this.creditId,
     required this.character,
+    required this.department,
+    required this.job,
   });
 
   factory Cast.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,8 @@ class Cast {
       avatar: json['profile_path'] ?? '',
       creditId: json['credit_id'],
       character: json['character'],
+      department: json['department'] ?? '',
+      job: json['job'] ?? '',
     );
   }
 
