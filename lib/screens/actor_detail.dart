@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
@@ -102,6 +103,8 @@ class _ActorDetailState extends State<ActorDetail> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.2,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.grey.shade400,
               child: FutureBuilder<Actor>(
                 future: actorDetails,
                 builder: (context, snapshot) {
@@ -235,28 +238,82 @@ class _ActorDetailState extends State<ActorDetail> {
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.8,
-              height: double.infinity,
-              child: Container(
-                color: Colors.blue,
-                child: FutureBuilder<List<Movie>>(
-                  future: movies,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<Movie>? movies = snapshot.data;
-                      return Text('MOVIES');
-                    } else {
-                      return Center(
-                        child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  },
-                ),
+              child: FutureBuilder<List<Movie>>(
+                future: movies,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Movie>? movies = snapshot.data;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'MOVIES',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            child: SizedBox(
+                              child: GridView.count(
+                                crossAxisCount: 5,
+                                mainAxisSpacing: 1.0,
+                                childAspectRatio: 0.67,
+                                children: List.generate(
+                                  movies!.length,
+                                  (index) {
+                                    return Container(
+                                      width: 185,
+                                      height: 360,
+                                      padding: EdgeInsets.all(15),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // TODO: go to detail page
+                                          },
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "$TMDB_WEB_URL/w185/${movies[index].posterPath}",
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                },
               ),
-            )
+            ),
           ],
         ),
       ),
