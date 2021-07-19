@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 
 class ActorDetail extends StatefulWidget {
   final int actorId;
-  ActorDetail(this.actorId);
+  final Function changeMovie;
+  ActorDetail(this.actorId, this.changeMovie);
 
   @override
   _ActorDetailState createState() => _ActorDetailState();
@@ -252,14 +253,17 @@ class _ActorDetailState extends State<ActorDetail> {
                           SizedBox(
                             height: 20,
                           ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'MOVIES',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'MOVIES',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -284,12 +288,17 @@ class _ActorDetailState extends State<ActorDetail> {
                                             BorderRadius.circular(10.0),
                                         child: InkWell(
                                           onTap: () {
-                                            // TODO: go to detail page
+                                            widget.changeMovie(movies[index]);
+                                            Navigator.pop(context);
                                           },
-                                          child: CachedNetworkImage(
-                                            imageUrl:
-                                                "$TMDB_WEB_URL/w185/${movies[index].posterPath}",
-                                            fit: BoxFit.cover,
+                                          child: Hero(
+                                            tag:
+                                                'movie_image${movies[index].id}',
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "$TMDB_WEB_URL/w185/${movies[index].posterPath}",
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                       ),

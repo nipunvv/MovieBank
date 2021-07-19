@@ -115,7 +115,7 @@ class ActorBrief extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ActorDetail(actor.id)),
+                      builder: (context) => ActorDetail(actor.id, changeMovie)),
                 );
               },
               child: Padding(
