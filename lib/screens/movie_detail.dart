@@ -17,6 +17,9 @@ import 'package:movie_bank/widgets/actor_brief.dart';
 import 'package:movie_bank/widgets/cast_shimmer.dart';
 import 'package:movie_bank/widgets/footer.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:movie_bank/widgets/genre_list.dart';
+import 'package:movie_bank/widgets/movie_meta.dart';
+import 'package:movie_bank/widgets/rating_container.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -44,13 +47,6 @@ class _MovieDetailState extends State<MovieDetail> {
     cast = fetchCast(widget.movie.id);
     similarMovies = fetchSimilarMovies(widget.movie.id);
   }
-
-  List<Color> colors = [
-    Colors.amber,
-    Colors.blue.shade400,
-    Colors.red.shade400,
-    Colors.orange.shade400,
-  ];
 
   Future<List<Cast>> fetchCast(movieId) async {
     String url = "${TMDB_API_URL}movie/$movieId/credits";
@@ -113,126 +109,6 @@ class _MovieDetailState extends State<MovieDetail> {
 
   String getSearchableString(String title) {
     return title.replaceAll(RegExp('\\s'), '+');
-  }
-
-  Widget getMovieDetails(String type, String content) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
-      ),
-      decoration: BoxDecoration(
-        color: Color(0xffd3d3d3),
-        border: Border.all(
-          color: Color(0xffd3d3d3),
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            type == 'language' ? Icons.language : Icons.calendar_today,
-            size: 18,
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            type == 'language'
-                ? LocaleNames.of(context)!.nameOf(content).toString()
-                : content.substring(0, 4),
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Montserrat',
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getGenres(List<Genre> genres) {
-    if (!(movie.genreIds is List)) return Container();
-    List<dynamic> genreIds = movie.genreIds;
-    List<Genre> genreNames = [];
-    genreIds.forEach((id) {
-      genreNames =
-          genres.where((element) => genreIds.contains(element.id)).toList();
-    });
-
-    if (genreNames.length > 0) {
-      return Row(children: [
-        for (var i = 0; i < genreNames.length; i++)
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 3,
-            ),
-            margin: EdgeInsets.only(
-              right: 5,
-            ),
-            decoration: BoxDecoration(
-              color: colors[i % 4],
-              border: Border.all(
-                color: colors[i % 4],
-              ),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Text(
-              genreNames[i].name,
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Montserrat',
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-      ]);
-    }
-    return Container();
-  }
-
-  Widget ratingContainer(ratingPercentage, voteCount) {
-    return Row(
-      children: [
-        Stack(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xff032541),
-              ),
-            ),
-            Container(
-              width: 60,
-              height: 60,
-              child: CircularPercentIndicator(
-                radius: 55.0,
-                lineWidth: 3.0,
-                percent: double.parse(ratingPercentage),
-                center: Text(
-                  '${(double.parse(ratingPercentage) * 100).round()}%',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                backgroundColor: Color(0xff204529),
-                progressColor: Color(0xff21d07a),
-              ),
-            )
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 10),
-          child: Text('From $voteCount votes'),
-        ),
-      ],
-    );
   }
 
   getBackgroundImage(imageUrl) {
@@ -359,11 +235,11 @@ class _MovieDetailState extends State<MovieDetail> {
                           ),
                           Row(
                             children: [
-                              getMovieDetails('language', movie.language),
+                              MovieMeta('language', movie.language),
                               SizedBox(
                                 width: 10,
                               ),
-                              getMovieDetails('release', movie.releaseDate),
+                              MovieMeta('release', movie.releaseDate),
                               SizedBox(
                                 width: 10,
                               ),
@@ -404,11 +280,11 @@ class _MovieDetailState extends State<MovieDetail> {
                             height: 20,
                           ),
                           if (genreModel.genres.length != 0)
-                            getGenres(genreModel.genres),
+                            GenreList(movie, genreModel.genres),
                           SizedBox(
                             height: 20,
                           ),
-                          ratingContainer(
+                          RatingContainer(
                             (movie.voteAvg / 10).toStringAsFixed(2),
                             movie.voteCount,
                           ),
