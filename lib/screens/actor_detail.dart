@@ -78,43 +78,10 @@ class _ActorDetailState extends State<ActorDetail> {
     );
   }
 
-  dynamic getImage(movie) {
-    if (movie.posterPath == '') {
-      return Container(
-        color: Colors.grey.shade200,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 5,
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.movie,
-                  size: 28,
-                ),
-                Text(
-                  movie.title,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return CachedNetworkImage(
-      imageUrl: "$TMDB_WEB_URL/w185/${movie.posterPath}",
-      fit: BoxFit.cover,
-    );
+  List<Movie> getValidMovies(data) {
+    if (data == null) return [];
+    List<Movie> movies = data;
+    return movies.where((movie) => movie.posterPath != '').toList();
   }
 
   @override
@@ -284,7 +251,7 @@ class _ActorDetailState extends State<ActorDetail> {
                 future: movies,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<Movie>? movies = snapshot.data;
+                    List<Movie> movies = getValidMovies(snapshot.data);
                     return Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 10,
@@ -318,7 +285,7 @@ class _ActorDetailState extends State<ActorDetail> {
                                 mainAxisSpacing: 1.0,
                                 childAspectRatio: 0.67,
                                 children: List.generate(
-                                  movies!.length,
+                                  movies.length,
                                   (index) {
                                     return Container(
                                       width: 185,
@@ -335,7 +302,11 @@ class _ActorDetailState extends State<ActorDetail> {
                                           child: Hero(
                                             tag:
                                                 'movie_image${movies[index].id}',
-                                            child: getImage(movies[index]),
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  "$TMDB_WEB_URL/w185/${movies[index].posterPath}",
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                       ),
