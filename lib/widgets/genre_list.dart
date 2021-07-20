@@ -8,7 +8,7 @@ class GenreList extends StatelessWidget {
 
   GenreList(this.movie, this.genres);
 
-  List<Color> colors = [
+  final List<Color> colors = [
     Colors.amber,
     Colors.blue.shade400,
     Colors.red.shade400,
