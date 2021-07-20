@@ -237,17 +237,18 @@ class _ActorDetailState extends State<ActorDetail> {
                             SizedBox(
                               height: 10,
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'About',
-                                style: TextStyle(
-                                  fontFamily: 'Quicksand',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                            if (actor.biography != '')
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'About',
+                                  style: TextStyle(
+                                    fontFamily: 'Quicksand',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
-                            ),
                             SizedBox(
                               height: 5,
                             ),
