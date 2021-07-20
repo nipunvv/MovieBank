@@ -152,8 +152,9 @@ class _ActorDetailState extends State<ActorDetail> {
                     Actor? actor = snapshot.data;
                     return SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 5,
+                        padding: EdgeInsets.only(
+                          left: 8,
+                          right: 10,
                         ),
                         child: Column(
                           children: [
