@@ -73,7 +73,7 @@ class ActorBrief extends StatelessWidget {
               height: 20,
             ),
             Text(
-              'ALSO KNOWN FOR',
+              'BEST KNOWN FOR',
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 16,

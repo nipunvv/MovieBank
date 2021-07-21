@@ -215,6 +215,7 @@ class _MovieDetailState extends State<MovieDetail> {
                       constraints: BoxConstraints(
                         minHeight: MediaQuery.of(context).size.height * 0.8,
                       ),
+                      margin: EdgeInsets.only(top: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -362,6 +363,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                               onTap: () {
                                                 showCastDetails(casts[i]);
                                               },
+                                              hoverColor: Colors.transparent,
                                             ),
                                       ],
                                     )
