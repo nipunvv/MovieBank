@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:movie_bank/constants/constants.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/models/actor.dart';
+import 'package:movie_bank/screens/movie_detail.dart';
 import 'package:movie_bank/screens/search_results.dart';
 import 'package:http/http.dart' as http;
 
 class ActorDetail extends StatefulWidget {
   final int actorId;
-  final Function changeMovie;
-  ActorDetail(this.actorId, this.changeMovie);
+  ActorDetail(this.actorId);
 
   @override
   _ActorDetailState createState() => _ActorDetailState();
@@ -296,8 +296,15 @@ class _ActorDetailState extends State<ActorDetail> {
                                             BorderRadius.circular(10.0),
                                         child: InkWell(
                                           onTap: () {
-                                            widget.changeMovie(movies[index]);
-                                            Navigator.pop(context);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MovieDetail(
+                                                  movies[index],
+                                                ),
+                                              ),
+                                            );
                                           },
                                           child: Hero(
                                             tag:
