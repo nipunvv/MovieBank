@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_bank/models/Movie.dart';
 import 'package:movie_bank/models/genre.dart';
+import 'package:movie_bank/screens/genre_movies.dart';
 
 class GenreList extends StatelessWidget {
   final Movie movie;
@@ -28,30 +29,44 @@ class GenreList extends StatelessWidget {
     if (genreNames.length > 0) {
       return Row(children: [
         for (var i = 0; i < genreNames.length; i++)
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 3,
-            ),
-            margin: EdgeInsets.only(
-              right: 5,
-            ),
-            decoration: BoxDecoration(
-              color: colors[i % 4],
-              border: Border.all(
+          InkWell(
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 3,
+              ),
+              margin: EdgeInsets.only(
+                right: 5,
+              ),
+              decoration: BoxDecoration(
                 color: colors[i % 4],
+                border: Border.all(
+                  color: colors[i % 4],
+                ),
+                borderRadius: BorderRadius.circular(15),
               ),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Text(
-              genreNames[i].name,
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Montserrat',
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+              child: Text(
+                genreNames[i].name,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Montserrat',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GenreMovies(
+                    genreNames[i].id,
+                    genreNames[i].name,
+                  ),
+                ),
+              );
+            },
+            hoverColor: Colors.transparent,
           ),
       ]);
     }
