@@ -20,6 +20,9 @@ class SearchResults extends StatefulWidget {
 class _SearchResultsState extends State<SearchResults> {
   List<Movie> results = [];
   bool isSearching = false;
+  String selectedGenre = 'Action';
+  String selectedOrderBy = 'Popularity';
+  String selectedRating = '9+';
 
   searchMovies(String keyword) async {
     setState(() {
@@ -69,6 +72,237 @@ class _SearchResultsState extends State<SearchResults> {
                 ),
               ),
             ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  height: 30,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        borderSide: BorderSide(
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                      filled: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 5.0,
+                        horizontal: 5.0,
+                      ),
+                      labelText: 'Query',
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 5),
+                        padding: EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButton<String>(
+                          focusColor: Colors.white,
+                          value: selectedGenre,
+                          underline: SizedBox(),
+                          style: TextStyle(color: Colors.white),
+                          iconEnabledColor: Colors.black,
+                          isExpanded: true,
+                          items: <String>[
+                            'Action',
+                            'Adventure',
+                            'Animation',
+                            'Comedy',
+                            'Crime',
+                            'Documentary',
+                            'Drama',
+                            'Family',
+                            'Fantasy',
+                            'History',
+                            'Horror',
+                            'Music',
+                            'Mystery',
+                            'Romance',
+                            'Science Fiction',
+                            'Thriller',
+                            'TV Movie',
+                            'War',
+                            'Western',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            "Select genre",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedGenre = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 5),
+                        padding: EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButton<String>(
+                          focusColor: Colors.white,
+                          value: selectedRating,
+                          underline: SizedBox(),
+                          style: TextStyle(color: Colors.white),
+                          iconEnabledColor: Colors.black,
+                          isExpanded: true,
+                          items: <String>[
+                            '9+',
+                            '8+',
+                            '7+',
+                            '6+',
+                            '5+',
+                            '4+',
+                            '3+',
+                            '2+',
+                            '1+',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            "Rating",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedRating = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 5),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              borderSide:
+                                  BorderSide(color: Colors.blue.shade800),
+                            ),
+                            filled: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0,
+                              horizontal: 5.0,
+                            ),
+                            labelText: 'Year',
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        height: 30,
+                        margin: EdgeInsets.only(right: 5),
+                        padding: EdgeInsets.only(left: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButton<String>(
+                          focusColor: Colors.white,
+                          value: selectedOrderBy,
+                          underline: SizedBox(),
+                          style: TextStyle(color: Colors.white),
+                          iconEnabledColor: Colors.black,
+                          isExpanded: true,
+                          items: <String>[
+                            'Popularity',
+                            'Release date',
+                            'Title',
+                            'Rating',
+                            'Vote count',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            "Please choose a langauage",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOrderBy = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          color: Colors.blue.shade600,
+                        ),
+                        child: IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.search),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           SizedBox(
             height: 50,
           ),
