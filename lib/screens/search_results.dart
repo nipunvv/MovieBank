@@ -23,9 +23,9 @@ class SearchResults extends StatefulWidget {
 class _SearchResultsState extends State<SearchResults> {
   List<Movie> results = [];
   bool isSearching = false;
-  String selectedGenre = 'Action';
-  String selectedOrderBy = 'Popularity';
-  String selectedRating = '9+';
+  String selectedGenre = 'All';
+  String selectedOrderBy = 'All';
+  String selectedRating = 'All';
   List<Genre> allGenres = [];
 
   final queryTextController = TextEditingController();
@@ -59,11 +59,14 @@ class _SearchResultsState extends State<SearchResults> {
   }
 
   getRatingValue() {
+    if (selectedRating == 'All') return '';
     return selectedRating.substring(0, 1);
   }
 
   getSortValue() {
-    if (selectedOrderBy == 'Popularity') {
+    if (selectedOrderBy == 'All') {
+      return '';
+    } else if (selectedOrderBy == 'Popularity') {
       return 'popularity.desc';
     } else if (selectedOrderBy == 'Release date') {
       return 'release_date.desc';
@@ -77,9 +80,7 @@ class _SearchResultsState extends State<SearchResults> {
   }
 
   getGenreId() {
-    if (allGenres.length == 0) {
-      return '0';
-    }
+    if (allGenres.length == 0 || selectedGenre == 'All') return '';
     int genreId =
         allGenres.where((element) => element.name == selectedGenre).first.id;
     return genreId.toString();
@@ -93,7 +94,6 @@ class _SearchResultsState extends State<SearchResults> {
     String genreId = getGenreId();
     String url =
         "${TMDB_API_URL}discover/movie?query=$query&year=$year&vote_average.gte=$rating&sort_by=$sortValue&with_genres=$genreId";
-    print('URL => $url');
     final response = await http.get(
       Uri.parse(url),
       headers: {HttpHeaders.authorizationHeader: "Bearer $TMDB_API_KEY"},
@@ -117,7 +117,7 @@ class _SearchResultsState extends State<SearchResults> {
   }
 
   List<String> getGenres(genres) {
-    List<String> genreNames = [];
+    List<String> genreNames = ['All'];
     genres.forEach((genre) => genreNames.add(genre.name));
     return genreNames;
   }
@@ -246,6 +246,7 @@ class _SearchResultsState extends State<SearchResults> {
                             iconEnabledColor: Colors.black,
                             isExpanded: true,
                             items: <String>[
+                              'All',
                               '9+',
                               '8+',
                               '7+',
@@ -305,6 +306,7 @@ class _SearchResultsState extends State<SearchResults> {
                             iconEnabledColor: Colors.black,
                             isExpanded: true,
                             items: <String>[
+                              'All',
                               'Popularity',
                               'Release date',
                               'Title',
@@ -320,7 +322,7 @@ class _SearchResultsState extends State<SearchResults> {
                               );
                             }).toList(),
                             hint: Text(
-                              "Please choose a langauage",
+                              "Select sort category",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -357,42 +359,48 @@ class _SearchResultsState extends State<SearchResults> {
             ),
             if (!isSearching)
               results.length > 0
-                  ? CarouselSlider(
-                      options: CarouselOptions(
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        viewportFraction: 0.2,
-                        enlargeCenterPage: false,
-                        enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                        disableCenter: false,
-                        aspectRatio: 16 / 9,
-                        initialPage: 0,
-                        enableInfiniteScroll: results.length > 5 ? true : false,
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 50,
                       ),
-                      items: results.map((item) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MovieDetail(
-                                        item,
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          viewportFraction: 0.2,
+                          enlargeCenterPage: false,
+                          enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                          disableCenter: false,
+                          aspectRatio: 16 / 9,
+                          initialPage: 0,
+                          enableInfiniteScroll:
+                              results.length > 5 ? true : false,
+                        ),
+                        items: results.map((item) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MovieDetail(
+                                          item,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: Image.network(
-                                  "$TMDB_WEB_URL/w342/${item.posterPath}",
-                                  fit: BoxFit.cover,
+                                    );
+                                  },
+                                  child: Image.network(
+                                    "$TMDB_WEB_URL/w342/${item.posterPath}",
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
                     )
                   : Center(
                       child: Text('No Results'),
