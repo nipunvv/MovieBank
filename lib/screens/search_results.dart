@@ -157,7 +157,8 @@ class _SearchResultsState extends State<SearchResults> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: SearchBar(searchMovies, toggleAdvancedSearch),
+        child:
+            SearchBar(searchMovies, toggleAdvancedSearch, showAdvancedSearch),
       ),
       body: SingleChildScrollView(
         child: Column(

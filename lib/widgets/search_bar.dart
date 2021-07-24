@@ -4,9 +4,12 @@ class SearchBar extends StatelessWidget {
   final searchFieldController = TextEditingController();
   final Function searchMovies;
   final Function toggleAdvancedSearch;
+  final bool showAdvancedSearch;
+
   SearchBar(
     this.searchMovies,
     this.toggleAdvancedSearch,
+    this.showAdvancedSearch,
   );
 
   @override
@@ -46,57 +49,59 @@ class SearchBar extends StatelessWidget {
             ),
             Row(
               children: [
-                Container(
-                  width: 250,
-                  height: 30,
-                  child: Center(
-                    child: TextField(
-                      controller: searchFieldController,
-                      showCursor: true,
-                      textInputAction: TextInputAction.go,
-                      onSubmitted: (value) {
-                        searchMovies(value);
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
+                if (!showAdvancedSearch)
+                  Container(
+                    width: 250,
+                    height: 30,
+                    child: Center(
+                      child: TextField(
+                        controller: searchFieldController,
+                        showCursor: true,
+                        textInputAction: TextInputAction.go,
+                        onSubmitted: (value) {
+                          searchMovies(value);
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5),
+                            ),
+                            borderSide: BorderSide.none,
                           ),
-                          borderSide: BorderSide.none,
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 5.0,
+                          ),
                         ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 5.0,
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 14,
                         ),
-                      ),
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 14,
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 30,
-                  height: 30,
-                  margin: EdgeInsets.only(left: 5),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      customBorder: new CircleBorder(),
-                      onTap: () {
-                        searchMovies(searchFieldController.text);
-                      },
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 18,
+                if (!showAdvancedSearch)
+                  Container(
+                    width: 30,
+                    height: 30,
+                    margin: EdgeInsets.only(left: 5),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        customBorder: new CircleBorder(),
+                        onTap: () {
+                          searchMovies(searchFieldController.text);
+                        },
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                       ),
                     ),
                   ),
-                ),
                 Container(
                   width: 30,
                   height: 30,
