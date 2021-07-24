@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class SearchBar extends StatelessWidget {
   final searchFieldController = TextEditingController();
   final Function searchMovies;
+  final Function toggleAdvancedSearch;
   SearchBar(
     this.searchMovies,
+    this.toggleAdvancedSearch,
   );
 
   @override
@@ -95,6 +97,28 @@ class SearchBar extends StatelessWidget {
                     ),
                   ),
                 ),
+                Container(
+                  width: 30,
+                  height: 30,
+                  margin: EdgeInsets.only(
+                    left: 10,
+                    right: 5,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      customBorder: new CircleBorder(),
+                      onTap: () {
+                        toggleAdvancedSearch();
+                      },
+                      child: Icon(
+                        Icons.manage_search,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ],

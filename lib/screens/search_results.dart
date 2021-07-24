@@ -23,6 +23,7 @@ class SearchResults extends StatefulWidget {
 class _SearchResultsState extends State<SearchResults> {
   List<Movie> results = [];
   bool isSearching = false;
+  bool showAdvancedSearch = false;
   String selectedGenre = 'All';
   String selectedOrderBy = 'All';
   String selectedRating = 'All';
@@ -137,6 +138,12 @@ class _SearchResultsState extends State<SearchResults> {
     ),
   );
 
+  toggleAdvancedSearch() {
+    this.setState(() {
+      showAdvancedSearch = !showAdvancedSearch;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -150,7 +157,7 @@ class _SearchResultsState extends State<SearchResults> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
-        child: SearchBar(searchMovies),
+        child: SearchBar(searchMovies, toggleAdvancedSearch),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -168,192 +175,194 @@ class _SearchResultsState extends State<SearchResults> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: 30,
-                    child: TextField(
-                      controller: queryTextController,
-                      decoration: inputDecoration,
+            if (showAdvancedSearch)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      height: 30,
+                      child: TextField(
+                        controller: queryTextController,
+                        decoration: inputDecoration,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          height: 30,
-                          margin: EdgeInsets.only(right: 5),
-                          padding: EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: DropdownButton<String>(
-                            focusColor: Colors.white,
-                            value: selectedGenre,
-                            underline: SizedBox(),
-                            style: TextStyle(color: Colors.white),
-                            iconEnabledColor: Colors.black,
-                            isExpanded: true,
-                            items: getGenres(genreModel.genres)
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              );
-                            }).toList(),
-                            hint: Text(
-                              "Select genre",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            height: 30,
+                            margin: EdgeInsets.only(right: 5),
+                            padding: EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedGenre = newValue!;
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.1,
-                          height: 30,
-                          margin: EdgeInsets.only(right: 5),
-                          padding: EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: DropdownButton<String>(
-                            focusColor: Colors.white,
-                            value: selectedRating,
-                            underline: SizedBox(),
-                            style: TextStyle(color: Colors.white),
-                            iconEnabledColor: Colors.black,
-                            isExpanded: true,
-                            items: <String>[
-                              'All',
-                              '9+',
-                              '8+',
-                              '7+',
-                              '6+',
-                              '5+',
-                              '4+',
-                              '3+',
-                              '2+',
-                              '1+',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              );
-                            }).toList(),
-                            hint: Text(
-                              "Rating",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedRating = newValue!;
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.1,
-                          height: 30,
-                          margin: EdgeInsets.only(right: 5),
-                          child: TextField(
-                            controller: yearTextController,
-                            decoration: inputDecoration,
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.15,
-                          height: 30,
-                          margin: EdgeInsets.only(right: 5),
-                          padding: EdgeInsets.only(left: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: DropdownButton<String>(
-                            focusColor: Colors.white,
-                            value: selectedOrderBy,
-                            underline: SizedBox(),
-                            style: TextStyle(color: Colors.white),
-                            iconEnabledColor: Colors.black,
-                            isExpanded: true,
-                            items: <String>[
-                              'All',
-                              'Popularity',
-                              'Release date',
-                              'Title',
-                              'Rating',
-                              'Vote count',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              );
-                            }).toList(),
-                            hint: Text(
-                              "Select sort category",
-                              style: TextStyle(
+                            child: DropdownButton<String>(
+                              focusColor: Colors.white,
+                              value: selectedGenre,
+                              underline: SizedBox(),
+                              style: TextStyle(color: Colors.white),
+                              iconEnabledColor: Colors.black,
+                              isExpanded: true,
+                              items: getGenres(genreModel.genres)
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                );
+                              }).toList(),
+                              hint: Text(
+                                "Select genre",
+                                style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedGenre = newValue!;
+                                });
+                              },
                             ),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedOrderBy = newValue!;
-                              });
-                            },
                           ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(3),
-                            color: Colors.blue.shade600,
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.1,
+                            height: 30,
+                            margin: EdgeInsets.only(right: 5),
+                            padding: EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: DropdownButton<String>(
+                              focusColor: Colors.white,
+                              value: selectedRating,
+                              underline: SizedBox(),
+                              style: TextStyle(color: Colors.white),
+                              iconEnabledColor: Colors.black,
+                              isExpanded: true,
+                              items: <String>[
+                                'All',
+                                '9+',
+                                '8+',
+                                '7+',
+                                '6+',
+                                '5+',
+                                '4+',
+                                '3+',
+                                '2+',
+                                '1+',
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                );
+                              }).toList(),
+                              hint: Text(
+                                "Rating",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedRating = newValue!;
+                                });
+                              },
+                            ),
                           ),
-                          child: IconButton(
-                            color: Colors.white,
-                            icon: Icon(Icons.search),
-                            onPressed: () {
-                              discoverMovies();
-                            },
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.1,
+                            height: 30,
+                            margin: EdgeInsets.only(right: 5),
+                            child: TextField(
+                              controller: yearTextController,
+                              decoration: inputDecoration,
+                            ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            height: 30,
+                            margin: EdgeInsets.only(right: 5),
+                            padding: EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: DropdownButton<String>(
+                              focusColor: Colors.white,
+                              value: selectedOrderBy,
+                              underline: SizedBox(),
+                              style: TextStyle(color: Colors.white),
+                              iconEnabledColor: Colors.black,
+                              isExpanded: true,
+                              items: <String>[
+                                'All',
+                                'Popularity',
+                                'Release date',
+                                'Title',
+                                'Rating',
+                                'Vote count',
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                );
+                              }).toList(),
+                              hint: Text(
+                                "Select sort category",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedOrderBy = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: Colors.blue.shade600,
+                            ),
+                            child: IconButton(
+                              color: Colors.white,
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                discoverMovies();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
             SizedBox(
               height: 50,
             ),
